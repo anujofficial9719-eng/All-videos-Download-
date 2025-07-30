@@ -4,15 +4,7 @@ import time
 import uuid
 import requests
 import logging
-import sys
-import subprocess
-
-# Try importing moviepy; install if missing
-try:
-    from moviepy.editor import VideoFileClip
-except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "moviepy"])
-    from moviepy.editor import VideoFileClip
+import ffmpeg
 
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait
@@ -26,9 +18,21 @@ from helper.utils import (
     get_porn_thumbnail_url,
     progress_for_pyrogram,
 )
-import nest_asyncio
 
+import nest_asyncio
 nest_asyncio.apply()
+
+
+def get_video_duration(file_path):
+    """Extract duration in seconds using ffmpeg."""
+    try:
+        probe = ffmpeg.probe(file_path)
+        duration = float(probe['format']['duration'])
+        return int(duration)
+    except Exception as e:
+        print(f"Error getting video duration: {e}")
+        return 0
+
 
 class Downloader:
     def __init__(self):
@@ -41,7 +45,7 @@ class Downloader:
 
         current_link = self.queue_links[user_id][index]
         msg = await update.reply_text(
-            f"**{index + 1}. Link:-** {current_link}\n\nDownloading... Please Have Patience\n 𝙇𝙤𝙖𝙙𝙞𝙣𝙜...\n\n⚠️ **Please note that for multiple downloads, the progress may not be immediately apparent. Therefore, if it appears that nothing is downloading, please wait a few minutes as the downloads may be processing in the background. The duration of the download process can also vary depending on the content being downloaded, so we kindly ask for your patience.**",
+            f"**{index + 1}. Link:-** {current_link}\n\nDownloading... Please Have Patience\n𝙇𝙤𝙖𝙙𝙞𝙣𝙜...",
             disable_web_page_preview=True
         )
 
@@ -76,7 +80,7 @@ class Downloader:
         if next_index < len(self.queue_links[user_id]):
             await self.download_multiple(bot, update, link_msg, next_index)
         else:
-            await update.reply_text(f"𝒜𝐿𝐿 𝐿𝐼𝒩𝒦𝒮 𝒟𝒪𝒲𝒩𝐿𝒪𝒜𝒟𝐸𝒟 𝒮𝒰𝒞𝒞𝐸𝒮𝒮𝐹𝒰𝐿𝐿𝒴 ✅", reply_to_message_id=link_msg.id)
+            await update.reply_text(f"✅ All videos downloaded and uploaded successfully!", reply_to_message_id=link_msg.id)
 
     async def _download_thumbnail(self, thumbnail_url):
         if not thumbnail_url:
@@ -96,10 +100,7 @@ class Downloader:
         for file in os.listdir('.'):
             if file.endswith(".mp4") or file.endswith('.mkv'):
                 try:
-                    # Extract duration using moviepy
-                    clip = VideoFileClip(file)
-                    duration = int(clip.duration)
-                    clip.close()
+                    duration = get_video_duration(file)
 
                     # Format duration to HH:MM:SS
                     hours, remainder = divmod(duration, 3600)
@@ -110,7 +111,11 @@ class Downloader:
                         chat_id=user_id,
                         video=file,
                         thumb=thumbnail_filename if thumbnail_filename else None,
-                        caption=f"**📁 File Name:- `{file}`\n\nDuration: {formatted_duration}\n\nHere Is your Requested Video 🔥**\n\nPowered By - @{Config.BOT_USERNAME}",
+                        caption=(
+                            f"**📁 File Name:** `{file}`\n"
+                            f"**Duration:** {formatted_duration}\n\n"
+                            f"Powered By - @{Config.BOT_USERNAME}"
+                        ),
                         progress=progress_for_pyrogram,
                         progress_args=("\n⚠️ Please Wait...\n\n**Uploading Started...**", msg, time.time())
                     )
@@ -121,8 +126,7 @@ class Downloader:
                 except Exception as e:
                     await msg.edit(str(e))
                     break
-            else:
-                continue
+
 
 async def start_bot():
     bot = Client(
@@ -130,7 +134,6 @@ async def start_bot():
         api_id=Config.API_ID,
         api_hash=Config.API_HASH,
         bot_token=Config.BOT_TOKEN
-        
     )
 
     try:
@@ -156,5 +159,7 @@ async def start_bot():
     while True:
         await asyncio.sleep(60)
 
+
 if __name__ == "__main__":
     asyncio.run(start_bot())
+            
