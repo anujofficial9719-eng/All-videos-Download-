@@ -8,7 +8,7 @@ class Config(object):
     # Pyrogram client config
     API_ID = os.environ.get("API_ID", "23990433")  # ⚠️ Required
     API_HASH = os.environ.get("API_HASH", "e6c4b6ee1933711bc4da9d7d17e1eb20")  # ⚠️ Required
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "6237026610:AAHhvQbM1nH4bDCAw80Dmx9rCmeGBbMdmQg")  # ⚠️ Required
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "6237026610:AAG5iFdJqL6Mm5RX6ACZIueCJJPXpAwqv44")  # ⚠️ Required
     BOT_USERNAME = os.environ.get("BOT_USERNAME", "autofilter2_bot")  # ⚠️ Required
     
     # Database config
