@@ -102,20 +102,20 @@ class Downloader:
                 try:
                     duration = get_video_duration(file)
 
-                    # Format duration to HH:MM:SS
-                    hours, remainder = divmod(duration, 3600)
-                    minutes, seconds = divmod(remainder, 60)
-                    formatted_duration = f"{hours:02}:{minutes:02}:{seconds:02}"
+# Format duration to HH:MM:SS
+hours, remainder = divmod(duration, 3600)
+minutes, seconds = divmod(remainder, 60)
+formatted_duration = f"{hours:02}:{minutes:02}:{seconds:02}"
 
                     await bot.send_video(
                         chat_id=user_id,
                         video=file,
                         thumb=thumbnail_filename if thumbnail_filename else None,
                         caption=(
-                            f"**📁 File Name:** `{file}`\n"
-                            f"**Duration:** {formatted_duration}\n\n"
-                            f"Powered By - @{Config.BOT_USERNAME}"
-                        ),
+    f"**📁 File Name:** `{file}`\n"
+    f"**Duration:** {formatted_duration}\n\n"
+    f"Powered By - @{Config.BOT_USERNAME}"
+),
                         progress=progress_for_pyrogram,
                         progress_args=("\n⚠️ Please Wait...\n\n**Uploading Started...**", msg, time.time())
                     )
