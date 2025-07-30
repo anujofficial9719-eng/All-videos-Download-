@@ -80,7 +80,10 @@ class Downloader:
         if next_index < len(self.queue_links[user_id]):
             await self.download_multiple(bot, update, link_msg, next_index)
         else:
-            await update.reply_text(f"✅ All videos downloaded and uploaded successfully!", reply_to_message_id=link_msg.id)
+            await update.reply_text(
+                "✅ All videos downloaded and uploaded successfully!",
+                reply_to_message_id=link_msg.id
+            )
 
     async def _download_thumbnail(self, thumbnail_url):
         if not thumbnail_url:
@@ -98,24 +101,24 @@ class Downloader:
     async def _upload_video(self, bot, update, msg, thumbnail_filename):
         user_id = update.from_user.id
         for file in os.listdir('.'):
-            if file.endswith(".mp4") or file.endswith('.mkv'):
+            if file.endswith(".mp4") or file.endswith(".mkv"):
                 try:
                     duration = get_video_duration(file)
 
-# Format duration to HH:MM:SS
-hours, remainder = divmod(duration, 3600)
-minutes, seconds = divmod(remainder, 60)
-formatted_duration = f"{hours:02}:{minutes:02}:{seconds:02}"
+                    # Format duration to HH:MM:SS
+                    hours, remainder = divmod(duration, 3600)
+                    minutes, seconds = divmod(remainder, 60)
+                    formatted_duration = f"{hours:02}:{minutes:02}:{seconds:02}"
 
                     await bot.send_video(
                         chat_id=user_id,
                         video=file,
                         thumb=thumbnail_filename if thumbnail_filename else None,
                         caption=(
-    f"**📁 File Name:** `{file}`\n"
-    f"**Duration:** {formatted_duration}\n\n"
-    f"Powered By - @{Config.BOT_USERNAME}"
-),
+                            f"**📁 File Name:** `{file}`\n"
+                            f"**Duration:** {formatted_duration}\n\n"
+                            f"Powered By - @{Config.BOT_USERNAME}"
+                        ),
                         progress=progress_for_pyrogram,
                         progress_args=("\n⚠️ Please Wait...\n\n**Uploading Started...**", msg, time.time())
                     )
@@ -162,4 +165,4 @@ async def start_bot():
 
 if __name__ == "__main__":
     asyncio.run(start_bot())
-            
+        
