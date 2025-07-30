@@ -1,5 +1,5 @@
 aiohttp
-moviepy
+ffmpeg-python
 dnspython
 motor
 Pyrogram
