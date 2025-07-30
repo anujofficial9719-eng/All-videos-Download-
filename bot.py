@@ -4,11 +4,21 @@ import time
 import uuid
 import requests
 import logging
+import sys
+import subprocess
+
+# Try importing moviepy; install if missing
+try:
+    from moviepy.editor import VideoFileClip
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "moviepy"])
+    from moviepy.editor import VideoFileClip
+
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait
 from pyrogram.types import Message
 import youtube_dl
-from moviepy.editor import VideoFileClip
+
 from config import Config
 from helper.utils import (
     download_progress_hook,
