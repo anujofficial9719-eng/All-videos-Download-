@@ -104,7 +104,7 @@ async def is_subscribed(bot: Client, user_id: int) -> bool:
 async def force_sub(bot: Client, user_id: int) -> bool:
     channel_username = Config.AUTH_CHANNEL
     buttons = [[InlineKeyboardButton(
-        text="📢 Cont. Owner to add you in Channel 📢", url="https://t.me/Snowball_Official")]]
+        text="📢 Cont. Owner to add you in Channel 📢", url="https://t.me/anujedits76")]]
     text = "**Sᴏʀʀy Dᴜᴅᴇ Yᴏᴜ'ʀᴇ Nᴏᴛ Jᴏɪɴᴇᴅ My Cʜᴀɴɴᴇʟ 😐. Sᴏ Pʟᴇᴀꜱᴇ Jᴏɪɴ Oᴜʀ Uᴩᴅᴀᴛᴇ Cʜᴀɴɴᴇʟ Tᴏ Cᴏɴᴛɪɴᴜᴇ**"
     try:
         await bot.get_chat_member(channel_username, user_id)
